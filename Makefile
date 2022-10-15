@@ -4,4 +4,4 @@ compile:
 pip:
 	pip install -r requirements.txt -r dev-requirements.txt
 up:
-	uvicorn server.main:app
+	python ./server/main.py
