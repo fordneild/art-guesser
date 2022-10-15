@@ -12,7 +12,4 @@ class BaseService:
 class ObjectService(BaseService):
     def list(self):
         a = self.db.query(Object).limit(5).all()
-        import pdb
-
-        pdb.set_trace()
         return a
