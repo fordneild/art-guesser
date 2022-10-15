@@ -1,6 +1,9 @@
+from typing import List
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+import uvicorn
+from views import object_router
 
 app = FastAPI()
 
@@ -39,3 +42,21 @@ async def main():
 @app.post("/date")
 async def create_item(item: Item):
     return item
+
+
+app.include_router(object_router)
+
+
+class Server:
+    app = "main:app"
+
+    def runServer(self, host: str, port: int, is_dev: bool):
+        uvicorn.run(self.app, host=host, port=port, debug=is_dev)
+
+
+if __name__ == "__main__":
+    server = Server()
+    host = "0.0.0.0"
+    port = 8000
+    is_dev = True
+    server.runServer(host, port, is_dev)
