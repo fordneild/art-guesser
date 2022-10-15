@@ -4,6 +4,8 @@ from pydantic import BaseModel
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 
+import uvicorn
+from views import object_router
 
 app = FastAPI()
 
@@ -68,3 +70,21 @@ async def style(item: style):
     real_style = "cool"
     content = jsonable_encoder({"style": real_style})
     return JSONResponse(content=content)
+
+
+app.include_router(object_router)
+
+
+class Server:
+    app = "main:app"
+
+    def runServer(self, host: str, port: int, is_dev: bool):
+        uvicorn.run(self.app, host=host, port=port, debug=is_dev)
+
+
+if __name__ == "__main__":
+    server = Server()
+    host = "0.0.0.0"
+    port = 8000
+    is_dev = True
+    server.runServer(host, port, is_dev)

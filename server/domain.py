@@ -1,5 +1,8 @@
 from pydantic import BaseModel
 
 
-class Object(BaseModel):
-    name: str
+class ObjectDomain(BaseModel):
+    title: str
+
+    class Config:
+        orm_mode = True
