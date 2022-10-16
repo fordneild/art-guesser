@@ -1,14 +1,7 @@
 # coding: utf-8
-from sqlalchemy import (
-    BigInteger,
-    Column,
-    DateTime,
-    ForeignKey,
-    Integer,
-    String,
-    Table,
-    Text,
-)
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text, text
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -31,26 +24,6 @@ class Constituent(Base):
     nationality = Column(String(128))
     visualbrowsernationality = Column(String(128))
     constituenttype = Column(String(30))
-
-
-class MediaItem(Base):
-    __tablename__ = "media_items"
-
-    mediaid = Column(BigInteger, primary_key=True)
-    mediatype = Column(String(32))
-    title = Column(String(2048))
-    description = Column(Text)
-    duration = Column(Integer)
-    language = Column(String(12))
-    thumbnailurl = Column(String(1024))
-    playurl = Column(String(1024))
-    downloadurl = Column(String(1024))
-    keywords = Column(String(2048))
-    tags = Column(String(2048))
-    imageurl = Column(String(1024))
-    presentationdate = Column(DateTime(True))
-    releasedate = Column(DateTime(True))
-    lastmodified = Column(DateTime(True))
 
 
 class Object(Base):
@@ -86,43 +59,62 @@ class Object(Base):
     lastdetectedmodification = Column(DateTime(True))
     customprintegerurl = Column(String(512))
 
-
-t_media_relationships = Table(
-    "media_relationships",
-    metadata,
-    Column("mediaid", ForeignKey("media_items.mediaid", ondelete="CASCADE")),
-    Column("relatedid", BigInteger),
-    Column("relatedentity", String(32)),
-)
+    terms = relationship("ObjectsTerm")
 
 
-t_objects_constituents = Table(
-    "objects_constituents",
-    metadata,
-    Column("objectid", ForeignKey("objects.objectid", ondelete="CASCADE")),
-    Column(
-        "constituentid", ForeignKey("constituents.constituentid", ondelete="CASCADE")
-    ),
-    Column("displayorder", Integer),
-    Column("roletype", String(64)),
-    Column("role", String(64)),
-    Column("prefix", String(64)),
-    Column("suffix", String(64)),
-    Column("displaydate", String(128)),
-    Column("beginyear", Integer),
-    Column("endyear", Integer),
-    Column("country", String(64)),
-    Column("zipcode", String(16)),
-)
+class PublishedImage(Base):
+    __tablename__ = "published_images"
+
+    uuid = Column(UUID, primary_key=True)
+    iiifurl = Column(String(512))
+    iiifthumburl = Column(String(512))
+    viewtype = Column(String(32))
+    sequence = Column(String(32))
+    width = Column(Integer)
+    height = Column(Integer)
+    maxpixels = Column(Integer)
+    created = Column(DateTime(True))
+    modified = Column(DateTime(True))
+    depictstmsobjectid = Column(Integer)
+    assistivetext = Column(Text)
 
 
-t_objects_terms = Table(
-    "objects_terms",
-    metadata,
-    Column("termid", Integer),
-    Column("objectid", ForeignKey("objects.objectid", ondelete="CASCADE")),
-    Column("termtype", String(64)),
-    Column("term", String(256)),
-    Column("visualbrowsertheme", String(32)),
-    Column("visualbrowserstyle", String(64)),
-)
+class ObjectsConstituent(Base):
+    __tablename__ = "objects_constituents"
+
+    id = Column(
+        Integer,
+        primary_key=True,
+        server_default=text("nextval('objects_constituents_id_seq'::regclass)"),
+    )
+    objectid = Column(ForeignKey("objects.objectid", ondelete="CASCADE"))
+    constituentid = Column(ForeignKey("constituents.constituentid", ondelete="CASCADE"))
+    displayorder = Column(Integer)
+    roletype = Column(String(64))
+    role = Column(String(64))
+    prefix = Column(String(64))
+    suffix = Column(String(64))
+    displaydate = Column(String(128))
+    beginyear = Column(Integer)
+    endyear = Column(Integer)
+    country = Column(String(64))
+    zipcode = Column(String(16))
+
+    constituent = relationship("Constituent")
+    object = relationship("Object")
+
+
+class ObjectsTerm(Base):
+    __tablename__ = "objects_terms"
+
+    id = Column(
+        Integer,
+        primary_key=True,
+        server_default=text("nextval('objects_terms_id_seq'::regclass)"),
+    )
+    termid = Column(Integer)
+    objectid = Column(ForeignKey("objects.objectid", ondelete="CASCADE"))
+    termtype = Column(String(64))
+    term = Column(String(256))
+    visualbrowsertheme = Column(String(32))
+    visualbrowserstyle = Column(String(64))
