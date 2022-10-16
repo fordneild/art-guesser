@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="styles.css"/>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="java.js"></script>
+</head>
+<body id = "body">
+    <h1>Art Guesser</h1>
+    <input type="radio" name="game" value="artist">Artist
+    <input type="radio" name="game" value="style" checked>Style
+    <input type="radio" name="game" value="date">Date
+    <input type="submit" id= "choice_submit">
+    <br>
+    <div id="the_year">
+    <input type="year" id = "year_made" name = "year_made"> 
+    <label for="year_made">What year was this made?</label>
+    <input type="submit" id="year_submit"> 
+    </div>
+    <br>
+    <div id="the_artist">
+    <input type="text" id = "artist" name = "artist"> 
+    <label for="artist">Who created this piece?</label>
+    <input type="submit" id="artist_submit">
+    </div>
+    <br>
+    <div id = "the_style">
+    <input type="text" id = "style" name = "style"> 
+    <label for="artist">What style is this piece?</label>
+    <input type="submit" id="style_submit">
+    </div>
+    <div id="result"></div>
+</body>
+</html>
