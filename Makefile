@@ -5,6 +5,8 @@ pip:
 	pip install -r requirements.txt -r dev-requirements.txt
 up:
 	python ./server/main.py
+fe:
+	npm run --prefix client dev
 down:
 	docker compose down
 

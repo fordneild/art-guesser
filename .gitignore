@@ -1,2 +1,36 @@
+
+# Server
 Brewfile.lock.json
 *.pyc
+
+# Client
+
+# dependencies
+/client/node_modules
+
+# testing
+client/coverage
+
+# next.js
+client/.next/
+client/out/
+
+# production
+client/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+
+# local env files
+client/.env*.local
+
+# vercel
+client/.vercel
+
+# typescript
+client/*.tsbuildinfo
+client/next-env.d.ts

@@ -15,6 +15,9 @@ class BaseService:
 class ObjectService(BaseService):
     classifications = ("Painting", "Drawing")
 
+    def format_image_src(self, src: str, width: int, height: int) -> str:
+        return f"{src}/full/!{width},{height}/0/default.jpg"
+
     def list(self, limit: Optional[int] = 5):
         terms_agg = func.array_agg(
             func.json_build_object(ObjectsTerm.termtype, ObjectsTerm.term),
@@ -36,7 +39,7 @@ class ObjectService(BaseService):
         objects = (
             self.db.query(
                 objects_with_terms,
-                PublishedImage.iiifthumburl,
+                PublishedImage.iiifurl,
                 PublishedImage.width,
                 PublishedImage.height,
             )
@@ -54,7 +57,13 @@ class ObjectService(BaseService):
                 id=objectid,
                 title=title,
                 terms=terms,
-                image=ObjectImage(src=img_src, width=img_width, height=img_height),
+                image=ObjectImage(
+                    src=self.format_image_src(
+                        img_src, width=img_width, height=img_height
+                    ),
+                    width=img_width,
+                    height=img_height,
+                ),
             )
             for objectid, title, terms, img_src, img_width, img_height in objects
         ]
