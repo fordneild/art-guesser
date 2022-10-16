@@ -37,6 +37,7 @@ COPY objects FROM '/app/data/objects.csv' WITH (FORMAT csv, header);
 
 CREATE TABLE
     objects_terms(
+        id SERIAL PRIMARY key,
         termid integer,
         objectid integer,
         termtype character varying(64),
@@ -46,7 +47,15 @@ CREATE TABLE
         CONSTRAINT objectid FOREIGN KEY(objectid) REFERENCES objects(objectid) ON DELETE CASCADE
     );
 
-COPY objects_terms
+COPY
+    objects_terms(
+        termid,
+        objectid,
+        termtype,
+        term,
+        visualbrowsertheme,
+        visualbrowserstyle
+    )
 FROM
     '/app/data/objects_terms.csv'
 WITH (FORMAT csv, header);
@@ -75,6 +84,7 @@ WITH (FORMAT csv, header);
 
 CREATE TABLE
     objects_constituents(
+        id SERIAL PRIMARY key,
         objectid integer,
         constituentid integer,
         displayorder integer,
@@ -91,49 +101,46 @@ CREATE TABLE
         CONSTRAINT constituentid FOREIGN KEY(constituentid) REFERENCES constituents(constituentid) ON DELETE CASCADE
     );
 
-COPY objects_constituents
+COPY
+    objects_constituents(
+        objectid,
+        constituentid,
+        displayorder,
+        roletype,
+        role,
+        prefix,
+        suffix,
+        displaydate,
+        beginyear,
+        endyear,
+        country,
+        zipcode
+    )
 FROM
     '/app/data/objects_constituents.csv'
 WITH (FORMAT csv, header);
 
-CREATE TABLE
-    media_items(
-        mediaid bigint PRIMARY key,
-        mediatype character varying(32),
-        title character varying(2048),
-        description text,
-        duration integer,
-        language character varying(12),
-        thumbnailurl character varying(1024),
-        playurl character varying(1024),
-        downloadurl character varying(1024),
-        keywords character varying(2048),
-        tags character varying(2048),
-        imageurl character varying(1024),
-        presentationdate timestamp
+Create Table
+    published_images(
+        uuid UUID PRIMARY key,
+        iiifurl character varying(512),
+        iiifthumburl character varying(512),
+        viewtype character varying(32),
+        sequence character varying(32),
+        width integer,
+        height integer,
+        maxpixels integer,
+        created timestamp
         with
             time zone,
-            releasedate timestamp
+            modified timestamp
         with
             time zone,
-            lastmodified timestamp
-        with time zone
+            depictstmsobjectid integer,
+            assistivetext text
     );
 
-COPY media_items
+COPY published_images
 FROM
-    '/app/data/media_items.csv'
-WITH (FORMAT csv, header);
-
-CREATE TABLE
-    media_relationships(
-        mediaid bigint,
-        relatedid bigint,
-        relatedentity character varying(32),
-        CONSTRAINT mediaid FOREIGN KEY(mediaid) REFERENCES media_items(mediaid) ON DELETE CASCADE
-    );
-
-COPY media_relationships
-FROM
-    '/app/data/media_relationships.csv'
+    '/app/data/published_images.csv'
 WITH (FORMAT csv, header);
