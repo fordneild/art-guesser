@@ -5,3 +5,11 @@ pip:
 	pip install -r requirements.txt -r dev-requirements.txt
 up:
 	python ./server/main.py
+down:
+	docker compose down
+
+build:
+	docker compose build
+
+db:
+	docker compose up
