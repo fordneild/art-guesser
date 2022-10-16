@@ -41,20 +41,12 @@ async def main():
     return {"message": "Hello World"}
 
 
-@app.get("/picture")
-async def main():
-    return {
-        "date": "1999",
-        "img_src": "https://www.princeton.edu/sites/default/files/styles/half_1x/public/images/2022/02/KOA_Nassau_2697x1517.jpg?itok=fAtaOLnw",
-    }
-
-
 @app.post("/date")
 async def date(item: date):
     real_date = 1999
     guessed_date = item.date
     remainder = real_date - guessed_date
-    content = jsonable_encoder({"remainder": remainder})
+    content = jsonable_encoder({"remainder": remainder, "date": real_date})
     return JSONResponse(content=content)
 
 
