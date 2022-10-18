@@ -67,3 +67,21 @@ class ObjectService(BaseService):
             )
             for objectid, title, terms, img_src, img_width, img_height in objects
         ]
+
+    def get_year_by_id(
+        self,
+        object_id: int,
+    ) -> int:
+        return self.db.query(Object).filter_by(objectid=object_id).first().endyear
+
+    def get_title_by_year(self, year: int, limit: Optional[int] = 5) -> str:
+        import pdb
+
+        pdb.set_trace()
+        return [
+            t.title
+            for t in self.db.query(Object.title)
+            .filter(Object.endyear == year)
+            .limit(limit)
+            .all()
+        ]
